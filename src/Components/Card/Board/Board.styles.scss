@@ -1,0 +1,10 @@
+.gallery-wrapper {
+  display: grid;
+  $size: 8em;
+  grid-template-columns: repeat(var(--rows-number), $size);
+  grid-template-rows: repeat(var(--rows-number), $size);
+
+  gap: 0.5em;
+  padding: 1em;
+  border: 2px solid blue;
+}

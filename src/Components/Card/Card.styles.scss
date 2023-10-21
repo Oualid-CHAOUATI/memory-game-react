@@ -1,0 +1,48 @@
+.card {
+  // height: var(--img-size);
+  // width: var(--img-size);
+  cursor: pointer;
+  position: relative;
+
+  &.unlocked {
+    pointer-events: none;
+    transform: scale(0.7);
+  }
+  &.show {
+    // &:hover {
+    // transform: rotateY(180deg);
+    .img-side {
+      transform: rotateY(1turn);
+    }
+    .question-side {
+      transform: rotateY(0.5turn);
+    }
+  }
+
+  div {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transition: 800ms;
+  }
+  perspective: 1000px;
+
+  .img-side {
+    backface-visibility: hidden;
+    transform: rotateY(0.5turn);
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .question-side {
+    display: grid;
+    place-items: center;
+    font-size: 3em;
+    background-color: rgb(114, 36, 36);
+    // transform: rotateY(0turn);
+    backface-visibility: hidden;
+  }
+}
