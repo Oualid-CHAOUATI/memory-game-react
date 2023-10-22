@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Card } from "../Card.component";
 import "./Board.styles.scss";
 const imgs = [
@@ -18,7 +18,11 @@ const imgs = [
 ];
 
 export const Board = () => {
+  const boardRef = useRef(null);
   const imgsNummber = 8;
+
+  //le temps d'affuchages des cartes avant de les tourner
+  const timeBeforeHide = 3000;
 
   const [cellsImgs, setCellsImgs] = useState([]);
   const [unlockedImgs, setUnlockedImgs] = useState([]);
@@ -29,9 +33,13 @@ export const Board = () => {
   });
 
   const handleClick = ({ ref, imgUrl }) => {
+    //on clique deux fois sur le meme élément .. => meme imgUrl donc + 1point ? => no, on  quitte
+    if (ref.current == currentRefAndImg.ref?.current) return;
+
     if (currentRefAndImg.ref == null && currentRefAndImg.imgUrl == null) {
       return setCurrentRefAndImg({ ref, imgUrl });
     }
+
     if (imgUrl == currentRefAndImg.imgUrl) {
       ref.current.classList.add("unlocked");
       currentRefAndImg.ref.current.classList.add("unlocked");
@@ -39,35 +47,72 @@ export const Board = () => {
       setCurrentRefAndImg({ ref: null, imgUrl: null });
       setUnlockedImgs((v) => [...v, imgUrl]);
     } else {
-      currentRefAndImg.ref.current.classList.remove("show");
-      ref.current.classList.remove("show");
-      
+      boardRef.current.classList.add("disabled");
+      setTimeout(() => {
+        currentRefAndImg.ref.current.classList.remove("show");
+        ref.current.classList.remove("show");
+        boardRef.current.classList.remove("disabled");
+      }, 500);
+
       setCurrentRefAndImg({ ref: null, imgUrl: null });
     }
   };
 
-  useEffect(() => {
+  const createRandomImagesArray = () => {
     const myArray = [];
     const arrayCopy = [...imgs];
     for (let i = 0; i < imgsNummber; i++) {
       const randomIndex = Math.floor(Math.random() * arrayCopy.length);
 
-      myArray.push(arrayCopy[randomIndex]);
-      myArray.push(arrayCopy[randomIndex]);
+      const imgUrl = arrayCopy[randomIndex];
+      myArray.push({ imgUrl, key: imgUrl + Date.now() + Math.random() });
+      myArray.push({ imgUrl, key: imgUrl + Date.now() + Math.random() });
       arrayCopy.splice(randomIndex, 1);
     }
 
     setCellsImgs([...shuffle(myArray)]);
+  };
+
+  const handleWindowLoad = () => {
+    boardRef.current.classList.remove("isLoaded");
+    setTimeout(() => {
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          boardRef.current.classList.add("isLoaded");
+        }, timeBeforeHide);
+      });
+    });
+  };
+  useEffect(() => {
+    createRandomImagesArray();
+    handleWindowLoad();
   }, []);
+  const reset = () => {
+    setUnlockedImgs([]);
+    setCurrentRefAndImg({ ref: null, imgUrl: null });
+    createRandomImagesArray();
+
+    boardRef.current.classList.remove("isLoaded");
+
+    setTimeout(() => {
+      boardRef.current.classList.add("isLoaded");
+    }, timeBeforeHide);
+  };
+
   return (
-    <div>
-      <h2>{unlockedImgs.length}</h2>
+    <div className={`board `} ref={boardRef}>
+      <h2>
+        {unlockedImgs.length} / {imgsNummber}
+      </h2>
+      <button className="reset-btn" onClick={reset}>
+        replay
+      </button>
       <div
         className="gallery-wrapper"
         style={{ "--rows-number": imgsNummber / 2 }}
       >
-        {cellsImgs.map((img, index) => (
-          <Card imgUrl={img} key={img + index} clickHandler={handleClick} />
+        {cellsImgs.map((obj) => (
+          <Card imgUrl={obj.imgUrl} key={obj.key} clickHandler={handleClick} />
         ))}
       </div>
     </div>

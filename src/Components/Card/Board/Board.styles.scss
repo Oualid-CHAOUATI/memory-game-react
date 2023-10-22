@@ -1,3 +1,7 @@
+.board.disabled {
+  pointer-events: none;
+}
+
 .gallery-wrapper {
   display: grid;
   $size: 8em;
@@ -7,4 +11,8 @@
   gap: 0.5em;
   padding: 1em;
   border: 2px solid blue;
+}
+
+.reset-btn {
+  margin-bottom: 1em;
 }

@@ -1,3 +1,19 @@
+#show {
+  .img-side {
+    transform: rotateY(1turn);
+  }
+  .question-side {
+    transform: rotateY(0.5turn);
+  }
+}
+
+.board:not(.isLoaded) {
+  pointer-events: none;
+  .card {
+    @extend #show;
+  }
+}
+
 .card {
   // height: var(--img-size);
   // width: var(--img-size);
@@ -9,14 +25,7 @@
     transform: scale(0.7);
   }
   &.show {
-    // &:hover {
-    // transform: rotateY(180deg);
-    .img-side {
-      transform: rotateY(1turn);
-    }
-    .question-side {
-      transform: rotateY(0.5turn);
-    }
+    @extend #show;
   }
 
   div {
