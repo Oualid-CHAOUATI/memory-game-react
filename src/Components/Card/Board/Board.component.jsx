@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Card } from "../Card.component";
 import "./Board.styles.scss";
 const imgs = [
@@ -73,7 +73,7 @@ export const Board = () => {
     setCellsImgs([...shuffle(myArray)]);
   };
 
-  const handleWindowLoad = () => {
+  const handleWindowLoad = useCallback(() => {
     boardRef.current.classList.remove("isLoaded");
     setTimeout(() => {
       window.addEventListener("load", () => {
@@ -82,7 +82,7 @@ export const Board = () => {
         }, timeBeforeHide);
       });
     });
-  };
+  }, []);
   useEffect(() => {
     createRandomImagesArray();
     handleWindowLoad();
