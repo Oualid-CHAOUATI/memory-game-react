@@ -22,7 +22,7 @@ export const Board = () => {
   const imgsNummber = 8;
 
   //le temps d'affuchages des cartes avant de les tourner
-  const timeBeforeHide = 0;
+  const timeBeforeHide = 3000;
 
   const [cellsImgs, setCellsImgs] = useState([]);
   const [unlockedImgs, setUnlockedImgs] = useState([]);
@@ -77,7 +77,8 @@ export const Board = () => {
     boardRef.current.classList.remove("isLoaded");
     setTimeout(() => {
       addEventListener("load", () => {
-        // alert("loaded");
+        document.querySelector("#box").textContent = "loaded";
+        
         console.log("loaded");
         setTimeout(() => {
           boardRef.current.classList.add("isLoaded");
